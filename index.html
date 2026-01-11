@@ -2,70 +2,55 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Простой кликер</title>
+  <title>Telegram Профиль</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
       margin: 50px;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    /* Светлая тема */
-    body.light {
       background-color: #f0f0f0;
-      color: #222;
     }
-
-    /* Тёмная тема */
-    body.dark {
-      background-color: #222;
-      color: #f0f0f0;
+    .profile {
+      padding: 20px;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      display: inline-block;
     }
-
-    button {
-      padding: 10px 20px;
-      margin: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-    }
-
-    .click-btn {
-      background-color: #4CAF50;
-      color: white;
-    }
-
-    .theme-btn {
-      background-color: #555;
-      color: white;
+    img {
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
     }
   </style>
 </head>
-<body class="light">
-  <h1>Простой кликер</h1>
-  <p>Счёт: <span id="counter">0</span></p>
-  <button class="click-btn" onclick="increment()">Клик!</button>
-  <button class="theme-btn" onclick="toggleTheme()">Сменить тему</button>
+<body>
+  <h1>Ваш Telegram профиль</h1>
+  <div class="profile">
+    <img id="photo" src="" alt="Фото профиля">
+    <h2 id="name"></h2>
+    <p id="username"></p>
+  </div>
 
+  <!-- Подключаем Telegram WebApp API -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
-    let count = 0;
+    // Получаем данные пользователя из Telegram WebApp
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // разворачивает WebView
 
-    function increment() {
-      count++;
-      document.getElementById('counter').textContent = count;
-    }
+    const user = tg.initDataUnsafe.user;
 
-    function toggleTheme() {
-      const body = document.body;
-      if (body.classList.contains('light')) {
-        body.classList.remove('light');
-        body.classList.add('dark');
-      } else {
-        body.classList.remove('dark');
-        body.classList.add('light');
-      }
+    if (user) {
+      document.getElementById('name').textContent = user.first_name + 
+        (user.last_name ? ' ' + user.last_name : '');
+      document.getElementById('username').textContent = '@' + (user.username || 'без username');
+
+      // Фото профиля напрямую не отдаётся, нужно через Bot API
+      // Здесь можно поставить заглушку
+      document.getElementById('photo').src = "https://via.placeholder.com/100";
+    } else {
+      document.getElementById('name').textContent = "Нет данных о пользователе";
     }
   </script>
 </body>
