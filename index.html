@@ -2,21 +2,71 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Простая страница</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Простой кликер</title>
   <style>
-    body { font-family: sans-serif; margin: 2rem; }
-    h1 { color: #2a6; }
-    a { color: #06c; }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Светлая тема */
+    body.light {
+      background-color: #f0f0f0;
+      color: #222;
+    }
+
+    /* Тёмная тема */
+    body.dark {
+      background-color: #222;
+      color: #f0f0f0;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .click-btn {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .theme-btn {
+      background-color: #555;
+      color: white;
+    }
   </style>
 </head>
-<body>
-  <h1>Привет, мир!</h1>
-  <p>Это простая HTML-страница с базовой разметкой.</p>
-  <ul>
-    <li><strong>Заголовок:</strong> h1</li>
-    <li><strong>Абзац:</strong> p</li>
-    <li><strong>Ссылка:</strong> <a href="https://example.com">Перейти</a></li>
-  </ul>
+<body class="light">
+  <h1>Простой кликер</h1>
+  <p>Счёт: <span id="counter">0</span></p>
+  <button class="click-btn" onclick="increment()">Клик!</button>
+  <button class="theme-btn" onclick="toggleTheme()">Сменить тему</button>
+
+  <script>
+    let count = 0;
+
+    function increment() {
+      count++;
+      document.getElementById('counter').textContent = count;
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      if (body.classList.contains('light')) {
+        body.classList.remove('light');
+        body.classList.add('dark');
+      } else {
+        body.classList.remove('dark');
+        body.classList.add('light');
+      }
+    }
+  </script>
 </body>
 </html>
