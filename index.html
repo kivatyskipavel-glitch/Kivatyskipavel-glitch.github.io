@@ -2,56 +2,319 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Telegram Профиль</title>
+  <title>Время по миру</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    :root {
+      --bg: #f4f4f7;
+      --fg: #1f1f1f;
+      --card-bg: #ffffff;
+      --accent: #3b82f6;
+      --muted: #666;
+      --border: #e5e7eb;
+    }
+    .dark {
+      --bg: #0f1115;
+      --fg: #e6e6e6;
+      --card-bg: #171a21;
+      --accent: #60a5fa;
+      --muted: #9aa0a6;
+      --border: #2b2f36;
+    }
+
+    * { box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 50px;
-      background-color: #f0f0f0;
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      transition: background 0.2s ease, color 0.2s ease;
     }
-    .profile {
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
       padding: 20px;
-      border-radius: 10px;
-      background: #fff;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      display: inline-block;
     }
-    img {
-      border-radius: 50%;
-      width: 100px;
-      height: 100px;
+
+    header {
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 24px;
+      margin: 0 0 8px 0;
+    }
+    .subtitle {
+      color: var(--muted);
+      margin: 0 0 12px 0;
+      font-size: 14px;
+    }
+
+    .local-time {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .local-time .label {
+      font-weight: 600;
+    }
+    .local-time .value {
+      font-size: 22px;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.02em;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    @media (min-width: 820px) {
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    .card {
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--card-bg);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .city {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .city-name {
+      font-weight: 600;
+    }
+    .city-note {
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .city-time {
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.02em;
+      font-size: 18px;
+    }
+
+    .footer {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .accent {
+      color: var(--accent);
     }
   </style>
 </head>
 <body>
-  <h1>Ваш Telegram профиль</h1>
-  <div class="profile">
-    <img id="photo" src="" alt="Фото профиля">
-    <h2 id="name"></h2>
-    <p id="username"></p>
+  <div class="container">
+    <header>
+      <h1>Время здесь и по миру</h1>
+      <p class="subtitle">Тема страницы автоматически подстраивается под тему приложения Telegram.</p>
+    </header>
+
+    <section class="local-time" aria-label="Местное время">
+      <div class="label">Местное время</div>
+      <div class="value" id="local-time">--:--:--</div>
+    </section>
+
+    <section class="grid" aria-label="Города мира">
+      <!-- Беларусь (локально и Минск) -->
+      <div class="card">
+        <div class="city">
+          <div>
+            <div class="city-name">Минск</div>
+            <div class="city-note">Беларусь</div>
+          </div>
+          <div class="city-time" id="time-Minsk">--:--:--</div>
+        </div>
+      </div>
+
+      <!-- Столицы и ключевые города -->
+      <div class="card">
+        <div class="city">
+          <div>
+            <div class="city-name">Лондон</div>
+            <div class="city-note">Великобритания</div>
+          </div>
+          <div class="city-time" id="time-London">--:--:--</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="city">
+          <div>
+            <div class="city-name">Нью‑Йорк</div>
+            <div class="city-note">США</div>
+          </div>
+          <div class="city-time" id="time-New_York">--:--:--</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="city">
+          <div>
+            <div class="city-name">Токио</div>
+            <div class="city-note">Япония</div>
+          </div>
+          <div class="city-time" id="time-Tokyo">--:--:--</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="city">
+          <div>
+            <div class="city-name">Дубай</div>
+            <div class="city-note">ОАЭ</div>
+          </div>
+          <div class="city-time" id="time-Dubai">--:--:--</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="city">
+          <div>
+            <div class="city-name">Рио‑де‑Жанейро</div>
+            <div class="city-note">Бразилия</div>
+          </div>
+          <div class="city-time" id="time-Rio">--:--:--</div>
+        </div>
+      </div>
+
+      <!-- Интересные места -->
+      <div class="card">
+        <div class="city">
+          <div>
+            <div class="city-name">Сидней</div>
+            <div class="city-note">Австралия</div>
+          </div>
+          <div class="city-time" id="time-Sydney">--:--:--</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="city">
+          <div>
+            <div class="city-name">Рейкьявик</div>
+            <div class="city-note">Исландия</div>
+          </div>
+          <div class="city-time" id="time-Reykjavik">--:--:--</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="city">
+          <div>
+            <div class="city-name">Антарктида</div>
+            <div class="city-note">Станция Мак‑Мердо</div>
+          </div>
+          <div class="city-time" id="time-McMurdo">--:--:--</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      Обновляется каждую секунду. Формат времени — локальный для региона.
+    </div>
   </div>
 
-  <!-- Подключаем Telegram WebApp API -->
+  <!-- Telegram WebApp API (для автотемы внутри Telegram) -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
-    // Получаем данные пользователя из Telegram WebApp
-    const tg = window.Telegram.WebApp;
-    tg.expand(); // разворачивает WebView
-
-    const user = tg.initDataUnsafe.user;
-
-    if (user) {
-      document.getElementById('name').textContent = user.first_name + 
-        (user.last_name ? ' ' + user.last_name : '');
-      document.getElementById('username').textContent = '@' + (user.username || 'без username');
-
-      // Фото профиля напрямую не отдаётся, нужно через Bot API
-      // Здесь можно поставить заглушку
-      document.getElementById('photo').src = "https://via.placeholder.com/100";
-    } else {
-      document.getElementById('name').textContent = "Нет данных о пользователе";
+    // Определение темы: сначала Telegram, затем fallback на prefers-color-scheme
+    function applyThemeFromTelegram() {
+      try {
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+          const scheme = tg.colorScheme; // 'light' | 'dark'
+          document.body.classList.toggle('dark', scheme === 'dark');
+          // Реакция на смену темы в реальном времени
+          tg.onEvent('themeChanged', () => {
+            document.body.classList.toggle('dark', tg.colorScheme === 'dark');
+          });
+          tg.expand?.();
+          return true;
+        }
+      } catch (_) {}
+      return false;
     }
+
+    function applyThemeFallback() {
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.body.classList.toggle('dark', prefersDark);
+      // Слушаем изменение системной темы
+      if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+          document.body.classList.toggle('dark', e.matches);
+        });
+      }
+    }
+
+    if (!applyThemeFromTelegram()) {
+      applyThemeFallback();
+    }
+
+    // Форматирование времени через Intl с заданной таймзоной
+    function formatTime(timeZone) {
+      const now = new Date();
+      return new Intl.DateTimeFormat('ru-RU', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+        timeZone
+      }).format(now);
+    }
+
+    // Список таймзон
+    const zones = {
+      'Minsk': 'Europe/Minsk',
+      'London': 'Europe/London',
+      'New_York': 'America/New_York',
+      'Tokyo': 'Asia/Tokyo',
+      'Dubai': 'Asia/Dubai',
+      'Rio': 'America/Sao_Paulo',
+      'Sydney': 'Australia/Sydney',
+      'Reykjavik': 'Atlantic/Reykjavik',
+      'McMurdo': 'Antarctica/McMurdo'
+    };
+
+    function updateTimes() {
+      // Местное время (таймзона пользователя)
+      document.getElementById('local-time').textContent = new Intl.DateTimeFormat('ru-RU', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      }).format(new Date());
+
+      // Города
+      for (const [key, tz] of Object.entries(zones)) {
+        const el = document.getElementById('time-' + key);
+        if (el) el.textContent = formatTime(tz);
+      }
+    }
+
+    updateTimes();
+    setInterval(updateTimes, 1000);
+
+    // Защита от паузы таймеров: обновление при фокусе
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) updateTimes();
+    });
   </script>
 </body>
 </html>
