@@ -1,22 +1,742 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Простая страница</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: sans-serif; margin: 2rem; }
-    h1 { color: #2a6; }
-    a { color: #06c; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гигантская памятка по Python, Kivy, Pygame и ModernGL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #1a1a2e;
+            color: #e6e6e6;
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Навигация */
+        .sidebar {
+            width: 280px;
+            background-color: #16213e;
+            padding: 20px;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            border-right: 2px solid #0f3460;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #0f3460;
+        }
+        
+        .logo i {
+            color: #e94560;
+            font-size: 28px;
+            margin-right: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 20px;
+            color: #fff;
+        }
+        
+        .search-box {
+            margin-bottom: 25px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px solid #0f3460;
+            background-color: #1a1a2e;
+            color: #e6e6e6;
+            font-size: 14px;
+        }
+        
+        .nav-section {
+            margin-bottom: 25px;
+        }
+        
+        .nav-title {
+            color: #e94560;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-title i {
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-bottom: 8px;
+        }
+        
+        .nav-links a {
+            color: #b8b8b8;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            display: block;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background-color: #0f3460;
+            color: #fff;
+        }
+        
+        /* Основной контент */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0f3460, #16213e);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .header p {
+            color: #b8b8b8;
+            font-size: 16px;
+        }
+        
+        .section {
+            background-color: #16213e;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-left: 5px solid #e94560;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: #e94560;
+        }
+        
+        .subsection {
+            margin-bottom: 25px;
+        }
+        
+        .subsection-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #e94560;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #0f3460;
+        }
+        
+        .code-block {
+            background-color: #1a1a2e;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+            border-left: 4px solid #0f3460;
+        }
+        
+        pre {
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        
+        .code-comment {
+            color: #6a9955;
+        }
+        
+        .code-keyword {
+            color: #569cd6;
+        }
+        
+        .code-string {
+            color: #ce9178;
+        }
+        
+        .code-function {
+            color: #dcdcaa;
+        }
+        
+        .tip {
+            background-color: rgba(233, 69, 96, 0.1);
+            border-left: 4px solid #e94560;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .tip-title {
+            color: #e94560;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .tip-title i {
+            margin-right: 8px;
+        }
+        
+        ul, ol {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            color: #b8b8b8;
+            font-size: 14px;
+            border-top: 1px solid #0f3460;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 1100px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+            
+            .subsection-title {
+                font-size: 18px;
+            }
+        }
+        
+        .badge {
+            display: inline-block;
+            background-color: #e94560;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <body>
-  <h1>Привет, мир!</h1>
-  <p>Это простая HTML-страница с базовой разметкой.</p>
-  <ul>
-    <li><strong>Заголовок:</strong> h1</li>
-    <li><strong>Абзац:</strong> p</li>
-    <li><strong>Ссылка:</strong> <a href="https://example.com">Перейти</a></li>
-  </ul>
+    <div class="container">
+        <!-- Боковая панель навигации -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-book"></i>
+                <h1>Python Dev Памятка</h1>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Поиск по памятке...">
+            </div>
+            
+            <div class="nav-section">
+                <h3 class="nav-title"><i class="fab fa-python"></i> Python Основы</h3>
+                <ul class="nav-links">
+                    <li><a href="#python-basics" class="active">Основы Python</a></li>
+                    <li><a href="#data-structures">Структуры данных</a></li>
+                    <li><a href="#functions">Функции</a></li>
+                    <li><a href="#oop">ООП в Python</a></li>
+                    <li><a href="#modules">Модули и пакеты</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3 class="nav-title"><i class="fas fa-gamepad"></i> PyGame</h3>
+                <ul class="nav-links">
+                    <li><a href="#pygame-basics">Основы PyGame</a></li>
+                    <li><a href="#pygame-display">Окно и дисплей</a></li>
+                    <li><a href="#pygame-sprites">Спрайты и анимация</a></li>
+                    <li><a href="#pygame-events">События и ввод</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3 class="nav-title"><i class="fas fa-mobile-alt"></i> Kivy</h3>
+                <ul class="nav-links">
+                    <li><a href="#kivy-basics">Основы Kivy</a></li>
+                    <li><a href="#kivy-ui">UI компоненты</a></li>
+                    <li><a href="#kivy-events">События Kivy</a></li>
+                    <li><a href="#kivy-kv">KV Language</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3 class="nav-title"><i class="fas fa-cube"></i> ModernGL</h3>
+                <ul class="nav-links">
+                    <li><a href="#moderngl-basics">Основы ModernGL</a></li>
+                    <li><a href="#moderngl-shaders">Шейдеры</a></li>
+                    <li><a href="#moderngl-3d">3D графика</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3 class="nav-title"><i class="fas fa-lightbulb"></i> Полезное</h3>
+                <ul class="nav-links">
+                    <li><a href="#resources">Ресурсы</a></li>
+                    <li><a href="#cheatsheets">Шпаргалки</a></li>
+                    <li><a href="#tips">Советы</a></li>
+                </ul>
+            </div>
+        </aside>
+        
+        <!-- Основной контент -->
+        <main class="main-content">
+            <header class="header">
+                <h1>Гигантская памятка по Python, Kivy, Pygame и ModernGL</h1>
+                <p>Полное руководство для разработки игр, приложений и графики на Python</p>
+            </header>
+            
+            <!-- Раздел Python -->
+            <section id="python-basics" class="section">
+                <h2 class="section-title"><i class="fab fa-python"></i> Python Основы</h2>
+                
+                <div class="subsection">
+                    <h3 class="subsection-title">Основные конструкции</h3>
+                    <div class="code-block">
+                        <pre><code><span class="code-comment"># Условные операторы</span>
+<span class="code-keyword">if</span> condition:
+    <span class="code-comment"># выполняется если condition истинно</span>
+    <span class="code-function">print</span>(<span class="code-string">"Условие истинно"</span>)
+<span class="code-keyword">elif</span> another_condition:
+    <span class="code-comment"># выполняется если another_condition истинно</span>
+    <span class="code-function">print</span>(<span class="code-string">"Другое условие истинно"</span>)
+<span class="code-keyword">else</span>:
+    <span class="code-function">print</span>(<span class="code-string">"Все условия ложны"</span>)
+
+<span class="code-comment"># Циклы</span>
+<span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-function">range</span>(5):  <span class="code-comment"># 0, 1, 2, 3, 4</span>
+    <span class="code-function">print</span>(i)
+
+<span class="code-keyword">while</span> condition:
+    <span class="code-comment"># выполняет пока condition истинно</span>
+    <span class="code-function">print</span>(<span class="code-string">"Выполняюсь..."</span>)
+    <span class="code-comment"># не забудьте изменить condition чтобы избежать бесконечного цикла!</span></code></pre>
+                    </div>
+                    
+                    <div class="tip">
+                        <div class="tip-title"><i class="fas fa-lightbulb"></i> Совет</div>
+                        <p>Используйте list comprehensions для создания списков в одну строку: <code>[x**2 for x in range(10) if x % 2 == 0]</code></p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Раздел PyGame -->
+            <section id="pygame-basics" class="section">
+                <h2 class="section-title"><i class="fas fa-gamepad"></i> PyGame Основы</h2>
+                
+                <div class="subsection">
+                    <h3 class="subsection-title">Минимальное приложение PyGame</h3>
+                    <div class="code-block">
+                        <pre><code><span class="code-keyword">import</span> pygame
+<span class="code-keyword">import</span> sys
+
+<span class="code-comment"># Инициализация Pygame</span>
+pygame.init()
+
+<span class="code-comment"># Создание окна</span>
+screen = pygame.display.set_mode((800, 600))
+pygame.display.set_caption(<span class="code-string">"Моя игра"</span>)
+
+<span class="code-comment"># Цвета</span>
+WHITE = (255, 255, 255)
+BLUE = (0, 120, 255)
+
+<span class="code-comment"># Главный цикл игры</span>
+running = True
+<span class="code-keyword">while</span> running:
+    <span class="code-comment"># Обработка событий</span>
+    <span class="code-keyword">for</span> event <span class="code-keyword">in</span> pygame.event.get():
+        <span class="code-keyword">if</span> event.type == pygame.QUIT:
+            running = False
+        <span class="code-keyword">elif</span> event.type == pygame.KEYDOWN:
+            <span class="code-keyword">if</span> event.key == pygame.K_ESCAPE:
+                running = False
+    
+    <span class="code-comment"># Очистка экрана</span>
+    screen.fill(WHITE)
+    
+    <span class="code-comment"># Рисование</span>
+    pygame.draw.rect(screen, BLUE, (350, 250, 100, 100))
+    
+    <span class="code-comment"># Обновление экрана</span>
+    pygame.display.flip()
+    
+    <span class="code-comment"># Ограничение FPS</span>
+    pygame.time.Clock().tick(60)
+
+<span class="code-comment"># Завершение работы</span>
+pygame.quit()
+sys.exit()</code></pre>
+                    </div>
+                    
+                    <div class="tip">
+                        <div class="tip-title"><i class="fas fa-lightbulb"></i> Важно</div>
+                        <p>Всегда вызывайте <code>pygame.quit()</code> перед выходом из приложения, чтобы корректно освободить ресурсы.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Раздел Kivy -->
+            <section id="kivy-basics" class="section">
+                <h2 class="section-title"><i class="fas fa-mobile-alt"></i> Kivy Основы</h2>
+                
+                <div class="subsection">
+                    <h3 class="subsection-title">Простое приложение Kivy</h3>
+                    <div class="code-block">
+                        <pre><code><span class="code-keyword">from</span> kivy.app <span class="code-keyword">import</span> App
+<span class="code-keyword">from</span> kivy.uix.button <span class="code-keyword">import</span> Button
+<span class="code-keyword">from</span> kivy.uix.boxlayout <span class="code-keyword">import</span> BoxLayout
+<span class="code-keyword">from</span> kivy.uix.label <span class="code-keyword">import</span> Label
+
+<span class="code-keyword">class</span> MyApp(App):
+    <span class="code-keyword">def</span> <span class="code-function">build</span>(self):
+        <span class="code-comment"># Создание макета</span>
+        layout = BoxLayout(orientation=<span class="code-string">'vertical'</span>, padding=20, spacing=10)
+        
+        <span class="code-comment"># Создание виджетов</span>
+        label = Label(text=<span class="code-string">'Привет, Kivy!'</span>, font_size=<span class="code-string">'24sp'</span>)
+        button = Button(text=<span class="code-string">'Нажми меня'</span>, size_hint=(1, 0.3))
+        button.bind(on_press=self.on_button_press)
+        
+        <span class="code-comment"># Добавление виджетов в макет</span>
+        layout.add_widget(label)
+        layout.add_widget(button)
+        
+        <span class="code-keyword">return</span> layout
+    
+    <span class="code-keyword">def</span> <span class="code-function">on_button_press</span>(self, instance):
+        <span class="code-function">print</span>(<span class="code-string">"Кнопка нажата!"</span>)
+        instance.text = <span class="code-string">"Спасибо!"</span>
+
+<span class="code-comment"># Запуск приложения</span>
+<span class="code-keyword">if</span> __name__ == <span class="code-string">'__main__'</span>:
+    MyApp().run()</code></pre>
+                    </div>
+                    
+                    <div class="tip">
+                        <div class="tip-title"><i class="fas fa-lightbulb"></i> Совет по Kivy</div>
+                        <p>Используйте файлы .kv для разделения логики и интерфейса. Это делает код чище и упрощает поддержку.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Раздел ModernGL -->
+            <section id="moderngl-basics" class="section">
+                <h2 class="section-title"><i class="fas fa-cube"></i> ModernGL Основы</h2>
+                
+                <div class="subsection">
+                    <h3 class="subsection-title">Минимальный пример ModernGL</h3>
+                    <div class="code-block">
+                        <pre><code><span class="code-keyword">import</span> moderngl
+<span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
+<span class="code-keyword">import</span> pygame
+
+<span class="code-comment"># Инициализация Pygame и OpenGL контекста</span>
+pygame.init()
+pygame.display.set_mode((800, 600), pygame.OPENGL | pygame.DOUBLEBUF)
+ctx = moderngl.create_context()
+
+<span class="code-comment"># Шейдерная программа</span>
+prog = ctx.program(
+    vertex_shader=<span class="code-string">'''
+        #version 330
+        in vec2 in_vert;
+        void main() {
+            gl_Position = vec4(in_vert, 0.0, 1.0);
+        }
+    '''</span>,
+    fragment_shader=<span class="code-string">'''
+        #version 330
+        out vec4 fragColor;
+        void main() {
+            fragColor = vec4(1.0, 0.5, 0.2, 1.0);
+        }
+    '''</span>
+)
+
+<span class="code-comment"># Данные вершин (треугольник)</span>
+vertices = np.array([
+    -0.6, -0.6,
+    0.6, -0.6,
+    0.0, 0.6
+], dtype=<span class="code-string">'f4'</span>)
+
+<span class="code-comment"># Создание Vertex Buffer Object (VBO)</span>
+vbo = ctx.buffer(vertices.tobytes())
+vao = ctx.simple_vertex_array(prog, vbo, <span class="code-string">'in_vert'</span>)
+
+<span class="code-comment"># Главный цикл</span>
+running = True
+<span class="code-keyword">while</span> running:
+    <span class="code-keyword">for</span> event <span class="code-keyword">in</span> pygame.event.get():
+        <span class="code-keyword">if</span> event.type == pygame.QUIT:
+            running = False
+    
+    <span class="code-comment"># Очистка буфера цвета</span>
+    ctx.clear(0.1, 0.1, 0.1)
+    
+    <span class="code-comment"># Рендеринг</span>
+    vao.render()
+    
+    <span class="code-comment"># Обновление экрана</span>
+    pygame.display.flip()
+
+pygame.quit()</code></pre>
+                    </div>
+                    
+                    <div class="tip">
+                        <div class="tip-title"><i class="fas fa-lightbulb"></i> Важно для ModernGL</div>
+                        <p>ModernGL требует понимания основ OpenGL и графического конвейера. Начните с простых примеров перед созданием сложных сцен.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Раздел полезного -->
+            <section id="resources" class="section">
+                <h2 class="section-title"><i class="fas fa-lightbulb"></i> Полезные ресурсы</h2>
+                
+                <div class="subsection">
+                    <h3 class="subsection-title">Официальная документация</h3>
+                    <ul>
+                        <li><strong>Python:</strong> <a href="https://docs.python.org/3/" style="color:#e94560;">docs.python.org</a></li>
+                        <li><strong>PyGame:</strong> <a href="https://www.pygame.org/docs/" style="color:#e94560;">pygame.org/docs</a></li>
+                        <li><strong>Kivy:</strong> <a href="https://kivy.org/doc/stable/" style="color:#e94560;">kivy.org/doc/stable</a></li>
+                        <li><strong>ModernGL:</strong> <a href="https://moderngl.readthedocs.io/" style="color:#e94560;">moderngl.readthedocs.io</a></li>
+                    </ul>
+                </div>
+                
+                <div class="subsection">
+                    <h3 class="subsection-title">Полезные библиотеки</h3>
+                    <ul>
+                        <li><strong>NumPy</strong> - работа с массивами и математика</li>
+                        <li><strong>Pillow</strong> - обработка изображений</li>
+                        <li><strong>PyInstaller</strong> - создание исполняемых файлов</li>
+                        <li><strong>OpenCV-Python</strong> - компьютерное зрение</li>
+                        <li><strong>SQLAlchemy</strong> - работа с базами данных</li>
+                    </ul>
+                </div>
+                
+                <div class="subsection">
+                    <h3 class="subsection-title">Советы по отладке <span class="badge">PRO</span></h3>
+                    <ol>
+                        <li>Используйте <code>print()</code> для быстрой отладки, но не забывайте удалять лишние выводы</li>
+                        <li>Используйте модуль <code>logging</code> для более структурированного логирования</li>
+                        <li>В PyGame используйте <code>pygame.time.get_ticks()</code> для отладки производительности</li>
+                        <li>В Kivy проверяйте журнал (log) для обнаружения ошибок в KV файлах</li>
+                        <li>В ModernGL убедитесь, что шейдеры компилируются без ошибок</li>
+                    </ol>
+                </div>
+            </section>
+            
+            <footer class="footer">
+                <p>Гигантская памятка по Python, Kivy, Pygame и ModernGL | Обновлено: 2023</p>
+                <p>Используйте для быстрого доступа к основным конструкциям и примерам кода</p>
+            </footer>
+        </main>
+    </div>
+    
+    <script>
+        // Функция для плавной прокрутки к якорям
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Убираем активный класс со всех ссылок
+                document.querySelectorAll('.nav-links a').forEach(link => {
+                    link.classList.remove('active');
+                });
+                
+                // Добавляем активный класс к текущей ссылке
+                this.classList.add('active');
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 20,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Функция для поиска по странице
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            if(searchTerm.length < 2) {
+                // Показываем все секции если поисковый запрос короткий
+                document.querySelectorAll('.section').forEach(section => {
+                    section.style.display = 'block';
+                });
+                return;
+            }
+            
+            // Ищем совпадения в заголовках и тексте
+            document.querySelectorAll('.section').forEach(section => {
+                const sectionText = section.textContent.toLowerCase();
+                const sectionTitle = section.querySelector('.section-title').textContent.toLowerCase();
+                
+                if(sectionText.includes(searchTerm) || sectionTitle.includes(searchTerm)) {
+                    section.style.display = 'block';
+                    
+                    // Подсвечиваем найденный текст
+                    highlightText(section, searchTerm);
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        });
+        
+        // Функция для подсветки найденного текста
+        function highlightText(element, searchTerm) {
+            // Убираем предыдущие подсветки
+            element.querySelectorAll('.highlight').forEach(highlight => {
+                const parent = highlight.parentNode;
+                parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
+                parent.normalize();
+            });
+            
+            // Ищем и подсвечиваем текст
+            if(searchTerm.length < 2) return;
+            
+            const walker = document.createTreeWalker(
+                element,
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+            );
+            
+            const nodes = [];
+            let node;
+            while(node = walker.nextNode()) {
+                if(node.textContent.toLowerCase().includes(searchTerm)) {
+                    nodes.push(node);
+                }
+            }
+            
+            nodes.forEach(node => {
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                span.style.backgroundColor = 'yellow';
+                span.style.color = 'black';
+                span.style.padding = '0 2px';
+                span.style.borderRadius = '2px';
+                
+                const content = node.textContent;
+                const idx = content.toLowerCase().indexOf(searchTerm);
+                
+                if(idx !== -1) {
+                    const before = content.substring(0, idx);
+                    const match = content.substring(idx, idx + searchTerm.length);
+                    const after = content.substring(idx + searchTerm.length);
+                    
+                    const fragment = document.createDocumentFragment();
+                    fragment.appendChild(document.createTextNode(before));
+                    
+                    const highlightSpan = span.cloneNode();
+                    highlightSpan.textContent = match;
+                    fragment.appendChild(highlightSpan);
+                    
+                    fragment.appendChild(document.createTextNode(after));
+                    
+                    node.parentNode.replaceChild(fragment, node);
+                }
+            });
+        }
+        
+        // Выделяем активный раздел при загрузке
+        window.addEventListener('load', function() {
+            // Определяем текущий раздел по положению скролла
+            function updateActiveSection() {
+                const sections = document.querySelectorAll('.section');
+                const navLinks = document.querySelectorAll('.nav-links a');
+                
+                let currentSectionId = '';
+                sections.forEach(section => {
+                    const rect = section.getBoundingClientRect();
+                    if(rect.top <= 150 && rect.bottom >= 150) {
+                        currentSectionId = '#' + section.id;
+                    }
+                });
+                
+                // Обновляем активную ссылку
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if(link.getAttribute('href') === currentSectionId) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateActiveSection);
+            updateActiveSection(); // Вызываем сразу для начального состояния
+        });
+    </script>
 </body>
 </html>
